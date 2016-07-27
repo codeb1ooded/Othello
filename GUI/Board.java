@@ -142,16 +142,16 @@ public class Board extends JComponent {
 			if(exist){
 				if(xStep >= 0 && yStep >= 0)
 					for(int i=currentX, j=currentY; i<=lastMeX && j<=lastMeY; i+=xStep, j+=yStep )
-						add(new Checker(n), currentX+1, currentY+1);
+						add(new Checker(n), i+1, j+1);
 				else if(xStep >= 0)
 					for(int i=currentX, j=currentY; i<=lastMeX && j>=lastMeY; i+=xStep, j+=yStep )
-						add(new Checker(n), currentX+1, currentY+1);
+						add(new Checker(n), i+1, j+1);
 				else if(yStep >= 0)
 					for(int i=currentX, j=currentY; i>=lastMeX && j<=lastMeY; i+=xStep, j+=yStep )
-						add(new Checker(n), currentX+1, currentY+1);
+						add(new Checker(n), i+1, j+1);
 				else
 					for(int i=currentX, j=currentY; i>=lastMeX && j>=lastMeY; i+=xStep, j+=yStep )
-						add(new Checker(n), currentX+1, currentY+1);
+						add(new Checker(n), i+1, j+1);
 			}
 		}
 	}
