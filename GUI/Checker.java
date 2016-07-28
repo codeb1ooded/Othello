@@ -34,7 +34,6 @@ public final class Checker {
 		g.fillOval(x, y, DIMENSION, DIMENSION);
 		g.setColor(Color.WHITE);
 		g.drawOval(x, y, DIMENSION, DIMENSION);
-		
 	}
 
 	public static boolean contains(int x, int y, int cx, int cy) {

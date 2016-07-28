@@ -20,6 +20,7 @@ package Othello;
  */
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -53,7 +54,7 @@ public class Board extends JComponent {
 	private ArrayList<Square> allSquares;
 
 	public Board() {
-		dimPrefSize = new Dimension(BOARDDIM, BOARDDIM);
+		dimPrefSize = new Dimension(BOARDDIM, BOARDDIM + SQUAREDIM);
 		allSquares = new ArrayList<>();
 		turn = 0;
 		for(int i=0; i<8; i++)
@@ -186,6 +187,14 @@ public class Board extends JComponent {
 					cur.draw(g, cx, cy);
 			}
 		}
+		if(turn == 0){
+			g.setColor(Color.RED);
+			g.drawString("Player 1 turn!!!", SQUAREDIM*2, BOARDDIM + SQUAREDIM/2);
+		}
+		else{
+			g.setColor(Color.GREEN);
+			g.drawString("Player 2 turn!!!", SQUAREDIM*2, BOARDDIM + SQUAREDIM/2);
+		}
 	}
 
 	private void paintCheckerBoard(Graphics g) {
@@ -200,6 +209,9 @@ public class Board extends JComponent {
 				g.setColor((g.getColor() == Color.BLACK) ? Color.WHITE : Color.BLACK);
 			}
 		}
+		g.setColor(Color.GRAY);
+		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+		g.fillRect(0, SQUAREDIM*8, SQUAREDIM * 8, SQUAREDIM);
 	}
 
 	public static boolean thisSquare(int x, int y, int cx, int cy) {
