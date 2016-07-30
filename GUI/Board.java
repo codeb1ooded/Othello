@@ -33,34 +33,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.XPath.Step;
 
 
 public class Board extends JComponent {
 
-	// dimension of othello board square (25% bigger than checker)
+	// dimension of each othello board square (25% bigger than checker)
 	private final static int SQUAREDIM = (int) (Checker.getDimension() * 1.25);
 
-	// dimension of othello board (width of 8 squares)
+	// dimension of othello board (width of 8 squares & height of 8+1 squares)
 	private final int BOARDDIM = 8 * SQUAREDIM;
+	
+	//variables to keep count of number of checkers of each player
+	private int player1, player2;
+	
+	// array list to store where all valid moves are there
+	private ArrayList<Square> validMoves;
 
+	// variable to keep mark of which players turn it is
 	private int turn;
 
 	// preferred size of Board component
 	private Dimension dimPrefSize;
 
-	// list of Checker objects and their initial positions
+	// list of all squares contained
 	private ArrayList<Square> allSquares;
+	
+	// count of all checkers on board
+	private int countCheckers;
 
 	public Board() {
 		dimPrefSize = new Dimension(BOARDDIM, BOARDDIM + SQUAREDIM);
 		allSquares = new ArrayList<>();
+		countCheckers = 0;
 		turn = 0;
 		for(int i=0; i<8; i++)
 			for(int j=0; j<8; j++)
 				allSquares.add(new Square(i, j));
-
+		player1 = player2 = 2;
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent me) {
@@ -75,14 +87,73 @@ public class Board extends JComponent {
 						boolean b = isMoveValid(s.rowNum, s.colNum);
 						if(b == false)	return;
 						addChecker(s.rowNum, s.colNum);
-						if(turn == 0) turn = 1;
-						else turn = 0;
+						if(turn == 0){ 
+							turn = 1;
+							player1 += 1;
+						}
+						else {
+							turn = 0;
+							player2 += 1;
+						}
+						countCheckers += 1;
+						if(countCheckers == 64){
+							printResult();
+						}
 						repaint();
+						
+						validMoves = getValidMoves();
+						if(validMoves.size() != 0)	return;
+						if(turn == 0)	turn = 1;
+						else	turn = 0;
+						
+						validMoves = getValidMoves();
+						if(validMoves.size() > 0)
+							repaint();
+						else 
+							printResult();
 					}
 			}	
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				super.mouseEntered(e);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				super.mouseExited(e);
+			}
 		});
 	}
 
+	private void printResult(){
+		String message;
+		if(player1 > player2)
+			message = "Player 1 wins!!";
+		else if(player1 < player2)
+			message = "Player 2 wins!!";
+		else
+			message = "Game draw!!";
+		JOptionPane.showMessageDialog(this,
+			    message,
+			    "Result",
+			    JOptionPane.WARNING_MESSAGE);
+	}
+	
+	private ArrayList<Square> getValidMoves(){
+		ArrayList<Square> myValidMoves = new ArrayList<>();
+		for(int i=0; i<8; i++){
+			for(int j=0; j<8; j++){
+				Checker checker = allSquares.get(i).checker;
+				if(checker == null){
+					if(isMoveValid(i, j))
+						myValidMoves.add(allSquares.get(i));
+				}
+			}
+		}
+		return allSquares;
+	}
+	
 	private boolean isMoveValid(int x, int y) {
 		int XDIR[] = {-1, -1, 0, 1, 1,  1,  0, -1};
 		int YDIR[] = { 0,  1, 1, 1, 0, -1, -1, -1};
@@ -142,17 +213,69 @@ public class Board extends JComponent {
 			currentY = colNum + yStep;
 			if(exist){
 				if(xStep >= 0 && yStep >= 0)
-					for(int i=currentX, j=currentY; i<=lastMeX && j<=lastMeY; i+=xStep, j+=yStep )
+					for(int i=currentX, j=currentY; i<=lastMeX && j<=lastMeY; i+=xStep, j+=yStep ){
+						int index = currentX * 8 + currentY;
+						CheckerType color = allSquares.get(index).checker.getCheckerType();
+						if(color != n){
+							if(turn == 0){ 
+								player1 += 1;
+								player2 -= 1;
+							}
+							else {
+								player2 += 1;
+								player1 -= 1;
+							}
+						}
 						add(new Checker(n), i+1, j+1);
+					}
 				else if(xStep >= 0)
-					for(int i=currentX, j=currentY; i<=lastMeX && j>=lastMeY; i+=xStep, j+=yStep )
+					for(int i=currentX, j=currentY; i<=lastMeX && j>=lastMeY; i+=xStep, j+=yStep ){
+						int index = currentX * 8 + currentY;
+						CheckerType color = allSquares.get(index).checker.getCheckerType();
+						if(color != n){
+							if(turn == 0){ 
+								player1 += 1;
+								player2 -= 1;
+							}
+							else {
+								player2 += 1;
+								player1 -= 1;
+							}
+						}
 						add(new Checker(n), i+1, j+1);
+					}
 				else if(yStep >= 0)
-					for(int i=currentX, j=currentY; i>=lastMeX && j<=lastMeY; i+=xStep, j+=yStep )
+					for(int i=currentX, j=currentY; i>=lastMeX && j<=lastMeY; i+=xStep, j+=yStep ){
+						int index = currentX * 8 + currentY;
+						CheckerType color = allSquares.get(index).checker.getCheckerType();
+						if(color != n){
+							if(turn == 0){ 
+								player1 += 1;
+								player2 -= 1;
+							}
+							else {
+								player2 += 1;
+								player1 -= 1;
+							}
+						}
 						add(new Checker(n), i+1, j+1);
+					}
 				else
-					for(int i=currentX, j=currentY; i>=lastMeX && j>=lastMeY; i+=xStep, j+=yStep )
+					for(int i=currentX, j=currentY; i>=lastMeX && j>=lastMeY; i+=xStep, j+=yStep ){
+						int index = currentX * 8 + currentY;
+						CheckerType color = allSquares.get(index).checker.getCheckerType();
+						if(color != n){
+							if(turn == 0){ 
+								player1 += 1;
+								player2 -= 1;
+							}
+							else {
+								player2 += 1;
+								player1 -= 1;
+							}
+						}
 						add(new Checker(n), i+1, j+1);
+					}
 			}
 		}
 	}
@@ -162,11 +285,6 @@ public class Board extends JComponent {
 			throw new IllegalArgumentException("row out of range: " + row);
 		if (col < 1 || col > 8)
 			throw new IllegalArgumentException("col out of range: " + col);
-		/*PosCheck posCheck = new PosCheck();
-		posCheck.checker = checker;
-		posCheck.cx = (col - 1) * SQUAREDIM + SQUAREDIM / 2;
-		posCheck.cy = (row - 1) * SQUAREDIM + SQUAREDIM / 2;
-		posChecks.add(posCheck);*/
 		allSquares.get((row-1)*8 + col-1).checker = checker;
 	}
 
