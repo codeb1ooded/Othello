@@ -36,6 +36,19 @@ public final class Checker {
 		g.drawOval(x, y, DIMENSION, DIMENSION);
 	}
 
+	public void drawHint(Graphics g, int cx, int cy) {
+		int x = cx - DIMENSION / 2;
+		int y = cy - DIMENSION / 2;
+
+		// Set checker color.
+		g.setColor(checkerType == CheckerType.GREEN_HINT ? Color.BLUE : Color.CYAN);
+
+		// Paint checker.
+		g.fillOval(x, y, DIMENSION, DIMENSION);
+		g.setColor(Color.WHITE);
+		g.drawOval(x, y, DIMENSION, DIMENSION);
+	}
+	
 	public static boolean contains(int x, int y, int cx, int cy) {
 		return (cx - x) * (cx - x) + (cy - y) * (cy - y) < DIMENSION / 2 * DIMENSION / 2;
 	}

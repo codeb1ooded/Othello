@@ -101,31 +101,27 @@ public class Board extends JComponent {
 						}
 						repaint();
 						
+						// Check if next user has a valid move if "NO" then change turn to this user & check if this 
+						// user has valid move. If next user has valid move then just change turn to it.
 						validMoves = getValidMoves();
 						if(validMoves.size() != 0)	return;
 						if(turn == 0)	turn = 1;
 						else	turn = 0;
 						
+						// If next user doesn't have valid move then check if this user has valid move
+						// If 'yes' just shuffle the turns
+						// If 'No' then declare result
 						validMoves = getValidMoves();
 						if(validMoves.size() > 0)
 							repaint();
 						else 
 							printResult();
 					}
-			}	
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				super.mouseEntered(e);
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				super.mouseExited(e);
 			}
 		});
 	}
 
+	// Print the result as per who has maximum number of checkers
 	private void printResult(){
 		String message;
 		if(player1 > player2)
@@ -140,20 +136,21 @@ public class Board extends JComponent {
 			    JOptionPane.WARNING_MESSAGE);
 	}
 	
+	// Returns all valid moves of player whose turn it is
 	private ArrayList<Square> getValidMoves(){
 		ArrayList<Square> myValidMoves = new ArrayList<>();
 		for(int i=0; i<8; i++){
 			for(int j=0; j<8; j++){
-				Checker checker = allSquares.get(i).checker;
-				if(checker == null){
-					if(isMoveValid(i, j))
-						myValidMoves.add(allSquares.get(i));
-				}
+				Checker checker = allSquares.get(i*8+j).checker;
+				if(checker == null && isMoveValid(i, j))
+						myValidMoves.add(allSquares.get(i*8+j));
+				
 			}
 		}
-		return allSquares;
+		return myValidMoves;
 	}
 	
+	// Tells if the move of current player is valid at position i, j
 	private boolean isMoveValid(int x, int y) {
 		int XDIR[] = {-1, -1, 0, 1, 1,  1,  0, -1};
 		int YDIR[] = { 0,  1, 1, 1, 0, -1, -1, -1};
@@ -179,6 +176,7 @@ public class Board extends JComponent {
 		return false;
 	}
 
+	// Add checker of current user to mentioned position and flips other checkers according to that
 	private void addChecker(int rowNum, int colNum) {
 		Checker c;
 		if(turn == 0) c = new Checker(CheckerType.RED);
@@ -280,6 +278,7 @@ public class Board extends JComponent {
 		}
 	}
 
+	// Add new checker to allSquares
 	public void add(Checker checker, int row, int col) {
 		if (row < 1 || row > 8)
 			throw new IllegalArgumentException("row out of range: " + row);
@@ -315,6 +314,7 @@ public class Board extends JComponent {
 		}
 	}
 
+	// Paints the checker board
 	private void paintCheckerBoard(Graphics g) {
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
@@ -327,11 +327,12 @@ public class Board extends JComponent {
 				g.setColor((g.getColor() == Color.BLACK) ? Color.WHITE : Color.BLACK);
 			}
 		}
-		g.setColor(Color.GRAY);
+		g.setColor(Color.LIGHT_GRAY);
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 		g.fillRect(0, SQUAREDIM*8, SQUAREDIM * 8, SQUAREDIM);
 	}
 
+	// Check if x and y exist in mentioned square with center coordinates at cx and cy
 	public static boolean thisSquare(int x, int y, int cx, int cy) {
 		return (cx - x) * (cx - x) + (cy - y) * (cy - y) < SQUAREDIM / 2 * SQUAREDIM / 2;
 	}
