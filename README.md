@@ -3,12 +3,12 @@
 
 ##Screenshots:
 <p align="center">
-  <img src="images/othello1.png" width="350"/>
+  <img src="docs/images/othello1.png" width="350"/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="images/othello2.png" width="350"/>
+  <img src="docs/images/othello2.png" width="350"/>
 </p>
 <p align="center">
-  <img src="images/othello3.png" width="350"/>
+  <img src="docs/images/othello3.png" width="350"/>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="images/othello4.png" width="350"/>
+  <img src="docs/images/othello4.png" width="350"/>
 </p>
